@@ -17,23 +17,12 @@ public partial class PlayerController : CharacterBody3D
 
 	private Camera3D camera3D;
 	private Node3D CameraPivot;
-    private AnimationTree animTree;
-    private float animSpeed;
-    private float animStage;
-    private bool isMoving;
-    private bool isIdle;
-    private float movementAverage;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		camera3D = GetNode<Camera3D>("CameraPivot/Camera3D");
 		CameraPivot = GetNode<Node3D>("CameraPivot");
-        animTree = GetNode<AnimationTree>("Pivot/PlayerModel/AnimationTree");
-        isMoving = false;
-        isIdle = true;
-        animStage = 0;
-        animTree.Set("parameters/Move/blend_position",1);
 		Input.MouseMode = Input.MouseModeEnum.Captured;
         
 	}
@@ -61,15 +50,11 @@ public partial class PlayerController : CharacterBody3D
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		if (direction != Vector3.Zero)
 		{
-            isMoving = true;
-            isIdle = false;
 			velocity.X = direction.X * Speed;
 			velocity.Z = direction.Z * Speed;
 		}
 		else
 		{
-            isMoving = false;
-            isIdle = true;
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
 			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
 		}
@@ -85,7 +70,6 @@ public partial class PlayerController : CharacterBody3D
 		
 		Velocity = velocity;
         MoveAndSlide();
-        UpdateAnimationParameters();
 	}
 	
 	public override void _Input(InputEvent @event)
@@ -102,10 +86,4 @@ public partial class PlayerController : CharacterBody3D
 		}
 	}
 
-    public void UpdateAnimationParameters()
-    {
-        animTree.Set("parameters/conditions/isIdle",isIdle);
-        animTree.Set("parameters/conditions/isMoving",isMoving);
-        
-    }
 }

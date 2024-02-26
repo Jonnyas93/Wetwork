@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://sepv7rllgbb6"]
+[gd_scene load_steps=6 format=3 uid="uid://sepv7rllgbb6"]
 
 [ext_resource type="PackedScene" uid="uid://ha27jcycbgpw" path="res://Scenes/PlayerController.tscn" id="1_7qf3x"]
 [ext_resource type="PackedScene" uid="uid://d311pbua8xolf" path="res://Models/characterMedium.fbx" id="2_7r631"]
+[ext_resource type="PackedScene" uid="uid://bnmhm57v0bl5k" path="res://Scenes/Guns/AKM.tscn" id="3_2s4ih"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nfqo2"]
 size = Vector3(60, 2, 60)
@@ -28,3 +29,6 @@ transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107
 
 [node name="PlayerController" parent="." instance=ExtResource("1_7qf3x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.211715, 0)
+
+[node name="AKM" parent="PlayerController" instance=ExtResource("3_2s4ih")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.344856, 1.41367, 0.311151)
