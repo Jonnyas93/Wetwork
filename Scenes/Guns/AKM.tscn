@@ -1,6 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://bnmhm57v0bl5k"]
+[gd_scene load_steps=11 format=3 uid="uid://bnmhm57v0bl5k"]
 
 [ext_resource type="Script" path="res://Scripts/Firearm.cs" id="1_77erp"]
+[ext_resource type="PackedScene" uid="uid://d10te4ijnyudv" path="res://Scenes/Particle Effects/MuzzleFlash.tscn" id="2_vj4kw"]
+[ext_resource type="AudioStream" uid="uid://b43jsym22f3sk" path="res://Sounds/GUNAuto_Assault Rifle A Fire_01.wav" id="3_wigj4"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gielk"]
 resource_name = "Wood"
@@ -157,9 +159,23 @@ shadow_mesh = SubResource("ArrayMesh_4vdyg")
 
 [node name="AKM" type="Node3D"]
 script = ExtResource("1_77erp")
+firerate = 600.0
 jamingFactor = 0.0
 
-[node name="AssaultRifle_2" type="MeshInstance3D" parent="."]
+[node name="GunComponents" type="Node3D" parent="."]
+
+[node name="MuzzleFlash" parent="GunComponents" instance=ExtResource("2_vj4kw")]
+transform = Transform3D(-1.10616e-08, 0, -0.25306, 0.25306, -1.10616e-08, -1.10616e-08, -1.10616e-08, -0.25306, 4.83519e-16, 0.770239, 0.117485, 0)
+
+[node name="GunModel" type="MeshInstance3D" parent="GunComponents"]
 transform = Transform3D(20, 0, 0, 0, -8.74228e-07, 20, 0, -20, -8.74228e-07, 0, 0, 0)
 mesh = SubResource("ArrayMesh_50f84")
 skeleton = NodePath("")
+
+[node name="FirerateTimer" type="Timer" parent="GunComponents"]
+one_shot = true
+
+[node name="ShootAudio" type="AudioStreamPlayer3D" parent="GunComponents"]
+stream = ExtResource("3_wigj4")
+
+[connection signal="timeout" from="GunComponents/FirerateTimer" to="." method="OnFirerateTimerTimeout"]
