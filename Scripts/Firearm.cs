@@ -25,6 +25,11 @@ public partial class Firearm : Node3D
     public float jamingFactor = 1f; //How prone is the weapon to jam
     [Export]
     public float range = 100f; //Maximum Range of the weapon
+    [Export]
+    public PackedScene BulletImpact {get; set;} //sprite for when the bullets from the gun hit something
+    [Export]
+    public string Caliber = "7.62 x 39mm";
+
 
     //Object 
     public MuzzleFlash muzzleFlash; //Muzzle flash component
@@ -32,7 +37,7 @@ public partial class Firearm : Node3D
     public Timer reloadTimer; //timer for reloading
     public AudioStreamPlayer3D shootAudio; //audio source for the bullets firing
     public AudioStreamPlayer3D reloadAudio; //audio source for reloading
-    public RayCast3D barrelRayCast;
+    public RayCast3D barrelRayCast; 
     
 
 
@@ -78,7 +83,17 @@ public partial class Firearm : Node3D
 
     public void Shoot()
     {
-        Vector3 impactPoint = barrelRayCast.GetCollisionPoint();
+        if(barrelRayCast.IsColliding())
+        {
+            Vector3 impactPoint = barrelRayCast.GetCollisionPoint();
+            Vector3 impactNormal = barrelRayCast.GetCollisionNormal();
+            Node scene = GetParent().GetParent().GetParent().GetParent();
+            var impact = BulletImpact.Instantiate<Node3D>();
+            scene.AddChild(impact);
+            impact.Position = impactPoint;
+            impact.LookAt(impactNormal, Vector3.Up);
+            
+        }
         muzzleFlash.Shoot();
         firerateTimer.Start();
         shootAudio.Play();

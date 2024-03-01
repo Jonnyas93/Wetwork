@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://bnmhm57v0bl5k"]
+[gd_scene load_steps=13 format=3 uid="uid://bnmhm57v0bl5k"]
 
 [ext_resource type="Script" path="res://Scripts/Firearm.cs" id="1_77erp"]
+[ext_resource type="PackedScene" uid="uid://eoeyc3ieievr" path="res://Scenes/Guns/BulletImpact762x39mm.tscn" id="2_rtfd5"]
 [ext_resource type="PackedScene" uid="uid://d10te4ijnyudv" path="res://Scenes/Particle Effects/MuzzleFlash.tscn" id="2_vj4kw"]
 [ext_resource type="AudioStream" uid="uid://b43jsym22f3sk" path="res://Sounds/GUNAuto_Assault Rifle A Fire_01.wav" id="3_wigj4"]
 [ext_resource type="AudioStream" uid="uid://dtnd1gnfpjbt0" path="res://Sounds/GUNMech_Insert Clip_04.wav" id="4_6fjkv"]
@@ -164,6 +165,7 @@ weaponName = "AKM"
 firerate = 600.0
 reloadSpeed = 0.55
 jamingFactor = 0.0
+BulletImpact = ExtResource("2_rtfd5")
 
 [node name="GunComponents" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
