@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://sepv7rllgbb6"]
+[gd_scene load_steps=8 format=3 uid="uid://sepv7rllgbb6"]
 
 [ext_resource type="PackedScene" uid="uid://ha27jcycbgpw" path="res://Scenes/PlayerController.tscn" id="1_7qf3x"]
 [ext_resource type="PackedScene" uid="uid://d311pbua8xolf" path="res://Models/characterMedium.fbx" id="2_7r631"]
@@ -10,16 +10,33 @@ size = Vector3(60, 2, 60)
 [sub_resource type="BoxMesh" id="BoxMesh_vr057"]
 size = Vector3(60, 2, 60)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_jsrey"]
+size = Vector3(60, 60, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pnrfy"]
+size = Vector3(60, 60, 2)
+
 [node name="Main" type="Node"]
 
 [node name="Ground" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
 shape = SubResource("BoxShape3D_nfqo2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
 mesh = SubResource("BoxMesh_vr057")
+
+[node name="Ground2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -25.485, 29.477)
+collision_layer = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground2"]
+shape = SubResource("BoxShape3D_jsrey")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground2"]
+mesh = SubResource("BoxMesh_pnrfy")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 38.0412, 0)
@@ -30,5 +47,10 @@ transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107
 [node name="PlayerController" parent="." instance=ExtResource("1_7qf3x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.211715, 0)
 
-[node name="AKM" parent="PlayerController" instance=ExtResource("3_2s4ih")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.344856, 1.41367, 0.311151)
+[node name="Weapon" type="Node3D" parent="PlayerController/CameraPivot" index="0"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -9.6277e-09, -1.61225, 0.110128)
+
+[node name="AKM" parent="PlayerController/CameraPivot/Weapon" instance=ExtResource("3_2s4ih")]
+transform = Transform3D(-1.00126, 0, -8.75329e-08, 0, 1.00126, 0, 8.75329e-08, 0, -1.00126, -0.344856, 1.41367, 0.311151)
+
+[editable path="PlayerController"]

@@ -5,26 +5,40 @@ using System.Data;
 public partial class PlayerController : CharacterBody3D
 {
 	[Export]
-	public const float Speed = 5.0f;
+	public const float speed = 5.0f;
 	[Export]
-	public const float JumpVelocity = 4.5f;
+	public const float jumpVelocity = 4.5f;
 
 	[Export]
-	public float MouseSensitivity = 0.05f;
+	public float mouseSensitivity = 0.05f;
 
     [Export]
     public float animDelta = 0.05f;
 
 	private Camera3D camera3D;
-	private Node3D CameraPivot;
+	private Node3D cameraPivot;
+    private Node3D weaponObject;
+    private Node3D dummyPointer;
+    private RayCast3D cameraRaycast;
+    private RayCast3D weaponRaycast;
+    private Marker3D backupAimpoint;
+    
+
+    private bool movingToAimpoint;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		camera3D = GetNode<Camera3D>("CameraPivot/Camera3D");
-		CameraPivot = GetNode<Node3D>("CameraPivot");
+		cameraPivot = GetNode<Node3D>("CameraPivot");
+        Node3D weaponNode = GetNode<Node3D>("CameraPivot/Weapon");
+        weaponObject = (Node3D)weaponNode.GetChild(0);
 		Input.MouseMode = Input.MouseModeEnum.Captured;
-        
+        cameraRaycast = GetNode<RayCast3D>("CameraPivot/CameraRayCast");
+        weaponRaycast = weaponObject.GetNode<RayCast3D>("GunComponents/BarrelRayCast");
+        backupAimpoint = GetNode<Marker3D>("CameraPivot/BackupAimPoint");
+        dummyPointer = GetNode<Node3D>("CameraPivot/DummyPointer");
+        movingToAimpoint = true;
 	}
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -41,7 +55,7 @@ public partial class PlayerController : CharacterBody3D
 		// Handle Jump.
 		if (Input.IsActionJustPressed("jump") && IsOnFloor())
 			{
-                velocity.Y = JumpVelocity;
+                velocity.Y = jumpVelocity;
                 
             }
 		// Get the input direction and handle the movement/deceleration.
@@ -50,13 +64,13 @@ public partial class PlayerController : CharacterBody3D
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		if (direction != Vector3.Zero)
 		{
-			velocity.X = direction.X * Speed;
-			velocity.Z = direction.Z * Speed;
+			velocity.X = direction.X * speed;
+			velocity.Z = direction.Z * speed;
 		}
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, speed);
+			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, speed);
 		}
 		
 		//  Capturing/Freeing the cursor
@@ -67,7 +81,13 @@ public partial class PlayerController : CharacterBody3D
 			else
 				Input.MouseMode = Input.MouseModeEnum.Visible;
 		}
-		
+		var aimPoint = cameraRaycast.GetCollisionPoint();
+        weaponObject.LookAt(aimPoint);
+        if (!cameraRaycast.IsColliding())
+        { 
+            weaponObject.LookAt(backupAimpoint.GlobalPosition);
+        }
+
 		Velocity = velocity;
         MoveAndSlide();
 	}
@@ -77,12 +97,13 @@ public partial class PlayerController : CharacterBody3D
 		if (@event is InputEventMouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
 		{
 			InputEventMouseMotion mouseEvent = @event as InputEventMouseMotion;
-			CameraPivot.RotateX(Mathf.DegToRad(mouseEvent.Relative.Y * MouseSensitivity));
-			RotateY(Mathf.DegToRad(-mouseEvent.Relative.X * MouseSensitivity));
+			cameraPivot.RotateX(Mathf.DegToRad(mouseEvent.Relative.Y * mouseSensitivity));
+			RotateY(Mathf.DegToRad(-mouseEvent.Relative.X * mouseSensitivity));
 
-			Vector3 cameraRot = CameraPivot.RotationDegrees;
+			Vector3 cameraRot = cameraPivot.RotationDegrees;
 			cameraRot.X = Mathf.Clamp(cameraRot.X, -70, 70);
-			CameraPivot.RotationDegrees = cameraRot;
+			cameraPivot.RotationDegrees = cameraRot;
+            
 		}
 	}
 

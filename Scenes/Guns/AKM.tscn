@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://bnmhm57v0bl5k"]
+[gd_scene load_steps=12 format=3 uid="uid://bnmhm57v0bl5k"]
 
 [ext_resource type="Script" path="res://Scripts/Firearm.cs" id="1_77erp"]
 [ext_resource type="PackedScene" uid="uid://d10te4ijnyudv" path="res://Scenes/Particle Effects/MuzzleFlash.tscn" id="2_vj4kw"]
 [ext_resource type="AudioStream" uid="uid://b43jsym22f3sk" path="res://Sounds/GUNAuto_Assault Rifle A Fire_01.wav" id="3_wigj4"]
+[ext_resource type="AudioStream" uid="uid://dtnd1gnfpjbt0" path="res://Sounds/GUNMech_Insert Clip_04.wav" id="4_6fjkv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gielk"]
 resource_name = "Wood"
@@ -159,10 +160,13 @@ shadow_mesh = SubResource("ArrayMesh_4vdyg")
 
 [node name="AKM" type="Node3D"]
 script = ExtResource("1_77erp")
+weaponName = "AKM"
 firerate = 600.0
+reloadSpeed = 0.55
 jamingFactor = 0.0
 
 [node name="GunComponents" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 
 [node name="MuzzleFlash" parent="GunComponents" instance=ExtResource("2_vj4kw")]
 transform = Transform3D(-1.10616e-08, 0, -0.25306, 0.25306, -1.10616e-08, -1.10616e-08, -1.10616e-08, -0.25306, 4.83519e-16, 0.770239, 0.117485, 0)
@@ -172,10 +176,20 @@ transform = Transform3D(20, 0, 0, 0, -8.74228e-07, 20, 0, -20, -8.74228e-07, 0, 
 mesh = SubResource("ArrayMesh_50f84")
 skeleton = NodePath("")
 
+[node name="BarrelRayCast" type="RayCast3D" parent="GunComponents"]
+transform = Transform3D(-4.37114e-08, -1, 3.55271e-15, 1, -4.37114e-08, -1.29818e-23, 2.11758e-22, 3.55271e-15, 1, 0.764848, 0.115999, 0)
+
 [node name="FirerateTimer" type="Timer" parent="GunComponents"]
+one_shot = true
+
+[node name="ReloadTimer" type="Timer" parent="GunComponents"]
 one_shot = true
 
 [node name="ShootAudio" type="AudioStreamPlayer3D" parent="GunComponents"]
 stream = ExtResource("3_wigj4")
 
+[node name="ReloadAudio" type="AudioStreamPlayer3D" parent="GunComponents"]
+stream = ExtResource("4_6fjkv")
+
 [connection signal="timeout" from="GunComponents/FirerateTimer" to="." method="OnFirerateTimerTimeout"]
+[connection signal="timeout" from="GunComponents/ReloadTimer" to="." method="OnReloadTimerTimeout"]

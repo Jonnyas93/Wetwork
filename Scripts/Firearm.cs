@@ -23,15 +23,23 @@ public partial class Firearm : Node3D
     public float chamberSpeed = 2f; //how long it takes to chamber a round
     [Export(PropertyHint.Range, "0,1")]
     public float jamingFactor = 1f; //How prone is the weapon to jam
+    [Export]
+    public float range = 100f; //Maximum Range of the weapon
 
     //Object 
     public MuzzleFlash muzzleFlash; //Muzzle flash component
     public Timer firerateTimer; //timer for how quickly the bullets shoot (min of 0.05 sec)
+    public Timer reloadTimer; //timer for reloading
     public AudioStreamPlayer3D shootAudio; //audio source for the bullets firing
+    public AudioStreamPlayer3D reloadAudio; //audio source for reloading
+    public RayCast3D barrelRayCast;
+    
 
 
     //Operation Variables
-    public bool isShooting; 
+    public bool ableToShoot; //bool for if the weapon is able to shoot
+
+    public int roundsInMag; //number of current rounds in the magazine
     
 
 	// Called when the node enters the scene tree for the first time.
@@ -39,31 +47,52 @@ public partial class Firearm : Node3D
 	{
         muzzleFlash = GetNode<MuzzleFlash>("GunComponents/MuzzleFlash");
         firerateTimer = GetNode<Timer>("GunComponents/FirerateTimer");
+        reloadTimer = GetNode<Timer>("GunComponents/ReloadTimer");
+        reloadAudio = GetNode<AudioStreamPlayer3D>("GunComponents/ReloadAudio");
         shootAudio = GetNode<AudioStreamPlayer3D>("GunComponents/ShootAudio");
+        barrelRayCast = GetNode<RayCast3D>("GunComponents/BarrelRayCast");
         firerateTimer.WaitTime = 1/(firerate/60);
-        GD.Print(1/(firerate/60));
-        isShooting = false;
+        roundsInMag = magazineSize;
+        ableToShoot = true;
+        barrelRayCast.ScaleObjectLocal(new Vector3(1,range,1));
+
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
-        if(Input.IsActionPressed("shoot") && !isShooting)
+        if(Input.IsActionPressed("shoot") && ableToShoot)
         {
-            Shoot();
-            isShooting = true;
+            if(roundsInMag>0)
+            {
+                Shoot();
+                ableToShoot = false;
+            }
+        }
+        if(Input.IsActionJustReleased("reload") && ableToShoot)
+        {
+            ableToShoot = false;
+            reloadTimer.Start(reloadSpeed);
+            reloadAudio.Play();
         }
 	}
 
     public void Shoot()
     {
+        Vector3 impactPoint = barrelRayCast.GetCollisionPoint();
         muzzleFlash.Shoot();
         firerateTimer.Start();
         shootAudio.Play();
+        roundsInMag--;
     }
 
     public void OnFirerateTimerTimeout()
     {
-        isShooting = false;
+        ableToShoot = true;
+    }
+
+    public void OnReloadTimerTimeout()
+    {
+        roundsInMag = magazineSize;
+        ableToShoot = true;
     }
 }
