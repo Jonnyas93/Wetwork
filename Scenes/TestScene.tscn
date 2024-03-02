@@ -53,4 +53,7 @@ transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -9.627
 [node name="AKM" parent="PlayerController/CameraPivot/Weapon" instance=ExtResource("3_2s4ih")]
 transform = Transform3D(-1.00126, 0, -8.75329e-08, 0, 1.00126, 0, 8.75329e-08, 0, -1.00126, -0.344856, 1.41367, 0.311151)
 
+[node name="CameraRayCast" parent="PlayerController/CameraPivot" index="2"]
+visible = false
+
 [editable path="PlayerController"]

@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Diagnostics;
+using System.Text;
 
 public partial class Firearm : Node3D
 {
@@ -83,21 +84,31 @@ public partial class Firearm : Node3D
 
     public void Shoot()
     {
-        if(barrelRayCast.IsColliding())
-        {
-            Vector3 impactPoint = barrelRayCast.GetCollisionPoint();
-            Vector3 impactNormal = barrelRayCast.GetCollisionNormal();
-            Node scene = GetParent().GetParent().GetParent().GetParent();
-            var impact = BulletImpact.Instantiate<Node3D>();
-            scene.AddChild(impact);
-            impact.Position = impactPoint;
-            impact.LookAt(impactNormal, Vector3.Up);
-            
-        }
+        hitObject();
         muzzleFlash.Shoot();
         firerateTimer.Start();
         shootAudio.Play();
         roundsInMag--;
+    }
+
+    private void hitObject()
+    {
+        if(barrelRayCast.IsColliding())
+        {
+            Vector3 impactPoint = barrelRayCast.GetCollisionPoint();
+            Vector3 impactNormal = barrelRayCast.GetCollisionNormal();
+            //GD.Print(impactNormal);
+            var impact = BulletImpact.Instantiate<Node3D>();
+            GetTree().CurrentScene.AddChild(impact);
+            impact.Position = impactPoint + (impactNormal * 0.01f);
+            if (impactNormal != Vector3.Up)
+            {
+                impact.LookAt(impactPoint + impactNormal, Vector3.Up);
+                impact.Transform =impact.Transform.RotatedLocal(Vector3.Right, (float)(Math.PI/2.0));
+            }
+            impact.Rotate(impactNormal, (float)GD.RandRange(0,MathF.PI*2));
+        }
+
     }
 
     public void OnFirerateTimerTimeout()
