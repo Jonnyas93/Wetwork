@@ -1,27 +1,61 @@
-[gd_scene load_steps=5 format=3 uid="uid://eoeyc3ieievr"]
+[gd_scene load_steps=10 format=3 uid="uid://eoeyc3ieievr"]
 
+[ext_resource type="Script" path="res://Scripts/BulletImpact.cs" id="1_7sb0d"]
 [ext_resource type="Texture2D" uid="uid://bhadv8pxmsdxj" path="res://Textures/BulletImpact.png" id="1_uyrmt"]
+[ext_resource type="Material" uid="uid://bm0dimqbbmfhj" path="res://Scenes/Guns/BulletImpact762x39mm.tres" id="3_7m5us"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eu7n6"]
-albedo_color = Color(1, 1, 0, 1)
-emission_enabled = true
-emission = Color(1, 1, 0.0156863, 1)
+[sub_resource type="Curve" id="Curve_o6gop"]
+min_value = -360.0
+max_value = 360.0
+_data = [Vector2(0, -7.13461), 0.0, 0.0, 0, 0, Vector2(1, 360), 0.0, 0.0, 0, 0]
+point_count = 2
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dy8k5"]
+[sub_resource type="CurveTexture" id="CurveTexture_mdw7a"]
+curve = SubResource("Curve_o6gop")
+
+[sub_resource type="Gradient" id="Gradient_f4vho"]
+offsets = PackedFloat32Array(0.533958, 0.814988, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.0398126, 0.0398126, 0.0398126, 0.960187, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_0ewb4"]
+gradient = SubResource("Gradient_f4vho")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8718d"]
+particle_flag_align_y = true
+direction = Vector3(0, 1, 0)
+spread = 23.0
+initial_velocity_min = 2.0
+initial_velocity_max = 3.0
 angular_velocity_max = 720.0
+angular_velocity_curve = SubResource("CurveTexture_mdw7a")
+gravity = Vector3(0, -12, 0)
+color_ramp = SubResource("GradientTexture1D_0ewb4")
+collision_mode = 1
+collision_friction = 1.0
+collision_bounce = 0.5
 
-[sub_resource type="QuadMesh" id="QuadMesh_r47rq"]
-size = Vector2(0.1, 0.1)
+[sub_resource type="BoxMesh" id="BoxMesh_o24yk"]
+material = ExtResource("3_7m5us")
+size = Vector3(0.025, 0.025, 0.025)
 
 [node name="BulletImpact762x39Mm" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, -7.10543e-15, 0, 7.10543e-15, 1, 0, 0, 0)
+script = ExtResource("1_7sb0d")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(0.125, 0, 0, 0, -5.46392e-09, -0.125, 0, 0.125, -5.46392e-09, 0, 0, 0)
 texture = ExtResource("1_uyrmt")
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
-transform = Transform3D(1.07887, 0, 0, 0, 1.07887, 0, 0, 0, 1.07887, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_eu7n6")
-explosiveness = 0.95
-process_material = SubResource("ParticleProcessMaterial_dy8k5")
-draw_pass_1 = SubResource("QuadMesh_r47rq")
+[node name="DustParticles" type="GPUParticles3D" parent="."]
+transform = Transform3D(1.07887, 0, 0, 0, 1.07887, 0, 0, 0, 1.07887, 0, 0.05, 0)
+emitting = false
+amount = 15
+lifetime = 10.0
+one_shot = true
+speed_scale = 2.0
+explosiveness = 1.0
+randomness = 0.57
+fixed_fps = 60
+collision_base_size = 0.03
+process_material = SubResource("ParticleProcessMaterial_8718d")
+draw_pass_1 = SubResource("BoxMesh_o24yk")

@@ -104,9 +104,9 @@ public partial class Firearm : Node3D
             if (impactNormal != Vector3.Up)
             {
                 impact.LookAt(impactPoint + impactNormal, Vector3.Up);
-                impact.Transform =impact.Transform.RotatedLocal(Vector3.Right, (float)(Math.PI/2.0));
+                impact.Transform = impact.Transform.RotatedLocal(Vector3.Left, (float)(Math.PI/2.0));
             }
-            impact.Rotate(impactNormal, (float)GD.RandRange(0,MathF.PI*2));
+            //impact.Rotate(impactNormal, (float)GD.RandRange(0,MathF.PI*2));
         }
 
     }

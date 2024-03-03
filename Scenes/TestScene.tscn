@@ -28,15 +28,70 @@ shape = SubResource("BoxShape3D_nfqo2")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
 mesh = SubResource("BoxMesh_vr057")
 
-[node name="Ground2" type="StaticBody3D" parent="."]
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="Ground"]
+size = Vector3(60, 2, 60)
+
+[node name="Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -25.485, 29.477)
 collision_layer = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground2"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall"]
 shape = SubResource("BoxShape3D_jsrey")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall"]
 mesh = SubResource("BoxMesh_pnrfy")
+
+[node name="Wall2" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.00463263, 0, 0.0613684, 0, 0.061543, 0, -0.0613684, 0, -0.00463263, 2.5533, 1.01321, 0.0199428)
+collision_layer = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall2"]
+shape = SubResource("BoxShape3D_jsrey")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall2"]
+mesh = SubResource("BoxMesh_pnrfy")
+
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="Wall2"]
+size = Vector3(60, 60, 2)
+
+[node name="Wall5" type="StaticBody3D" parent="."]
+transform = Transform3D(0.0327666, 0, 0.052095, 0, 0.061543, 0, -0.052095, 0, 0.0327666, -7.36559, 1.01321, -9.63415)
+collision_layer = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall5"]
+shape = SubResource("BoxShape3D_jsrey")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall5"]
+mesh = SubResource("BoxMesh_pnrfy")
+
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="Wall5"]
+size = Vector3(60, 60, 2)
+
+[node name="Wall3" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.00368978, 0.0372131, 0.0488785, 0.0028012, 0.0490176, -0.0371075, -0.0613684, 0, -0.00463263, 2.5533, 1.01321, -4.0537)
+collision_layer = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall3"]
+shape = SubResource("BoxShape3D_jsrey")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall3"]
+mesh = SubResource("BoxMesh_pnrfy")
+
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="Wall3"]
+size = Vector3(60, 60, 2)
+
+[node name="Wall4" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.00354994, -0.039541, 0.047026, -0.00297643, 0.0471598, 0.0394288, -0.0613684, 0, -0.00463263, 2.5533, 1.01321, -9.60804)
+collision_layer = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall4"]
+shape = SubResource("BoxShape3D_jsrey")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall4"]
+mesh = SubResource("BoxMesh_pnrfy")
+
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="Wall4"]
+size = Vector3(60, 60, 2)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 38.0412, 0)
