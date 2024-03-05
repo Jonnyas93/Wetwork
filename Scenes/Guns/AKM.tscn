@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bnmhm57v0bl5k"]
+[gd_scene load_steps=16 format=3 uid="uid://bnmhm57v0bl5k"]
 
 [ext_resource type="Script" path="res://Scripts/Firearm.cs" id="1_77erp"]
 [ext_resource type="PackedScene" uid="uid://eoeyc3ieievr" path="res://Scenes/Guns/BulletImpact762x39mm.tscn" id="2_rtfd5"]
@@ -159,6 +159,32 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_4vdyg")
 
+[sub_resource type="Animation" id="Animation_srotl"]
+length = 0.166671
+loop_mode = 1
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.0436332, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3r82r"]
+_data = {
+"Recoil": SubResource("Animation_srotl")
+}
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_8ksvk"]
+graph_offset = Vector2(-909.53, 45.5975)
+nodes/output/position = Vector2(200, 160)
+
 [node name="AKM" type="Node3D"]
 script = ExtResource("1_77erp")
 weaponName = "AKM"
@@ -192,6 +218,18 @@ stream = ExtResource("3_wigj4")
 
 [node name="ReloadAudio" type="AudioStreamPlayer3D" parent="GunComponents"]
 stream = ExtResource("4_6fjkv")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="GunComponents"]
+libraries = {
+"Global": SubResource("AnimationLibrary_3r82r")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="GunComponents"]
+libraries = {
+"Global": SubResource("AnimationLibrary_3r82r")
+}
+tree_root = SubResource("AnimationNodeBlendTree_8ksvk")
+anim_player = NodePath("../AnimationPlayer")
 
 [connection signal="timeout" from="GunComponents/FirerateTimer" to="." method="OnFirerateTimerTimeout"]
 [connection signal="timeout" from="GunComponents/ReloadTimer" to="." method="OnReloadTimerTimeout"]

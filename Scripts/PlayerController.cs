@@ -17,7 +17,7 @@ public partial class PlayerController : CharacterBody3D
 
 	private Camera3D camera3D;
 	private Node3D cameraPivot;
-    private Node3D weaponObject;
+    private Firearm weaponObject;
     private Node3D dummyPointer;
     private RayCast3D cameraRaycast;
     private RayCast3D weaponRaycast;
@@ -32,7 +32,7 @@ public partial class PlayerController : CharacterBody3D
 		camera3D = GetNode<Camera3D>("CameraPivot/Camera3D");
 		cameraPivot = GetNode<Node3D>("CameraPivot");
         Node3D weaponNode = GetNode<Node3D>("CameraPivot/Weapon");
-        weaponObject = (Node3D)weaponNode.GetChild(0);
+        weaponObject = (Firearm)weaponNode.GetChild(0);
 		Input.MouseMode = Input.MouseModeEnum.Captured;
         cameraRaycast = GetNode<RayCast3D>("CameraPivot/CameraRayCast");
         weaponRaycast = weaponObject.GetNode<RayCast3D>("GunComponents/BarrelRayCast");
@@ -81,13 +81,26 @@ public partial class PlayerController : CharacterBody3D
 			else
 				Input.MouseMode = Input.MouseModeEnum.Visible;
 		}
-		var aimPoint = cameraRaycast.GetCollisionPoint();
-        weaponObject.LookAt(aimPoint);
-        if (!cameraRaycast.IsColliding())
-        { 
-            weaponObject.LookAt(backupAimpoint.GlobalPosition);
+		
+        if(Input.IsActionPressed("shoot") && weaponObject.ableToShoot)
+        {
+            if(weaponObject.roundsInMag>0)
+            {
+                weaponObject.Shoot(delta);
+                weaponObject.ableToShoot = false;
+            }
+        }
+        if(Input.IsActionJustReleased("reload") && weaponObject.ableToShoot)
+        {
+            weaponObject.ableToShoot = false;
+            weaponObject.reloadTimer.Start(weaponObject.reloadSpeed);
+            weaponObject.reloadAudio.Play();
         }
 
+        if(weaponObject.ableToShoot)
+        {
+            CenterWeapon();
+        }
 		Velocity = velocity;
         MoveAndSlide();
 	}
@@ -106,5 +119,15 @@ public partial class PlayerController : CharacterBody3D
             
 		}
 	}
+
+    public void CenterWeapon()
+    {
+        var aimPoint = cameraRaycast.GetCollisionPoint();
+        weaponObject.LookAt(aimPoint);
+        if (!cameraRaycast.IsColliding())
+        { 
+            weaponObject.LookAt(backupAimpoint.GlobalPosition);
+        }
+    }
 
 }

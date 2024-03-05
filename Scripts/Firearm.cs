@@ -30,6 +30,12 @@ public partial class Firearm : Node3D
     public PackedScene BulletImpact {get; set;} //sprite for when the bullets from the gun hit something
     [Export]
     public string Caliber = "7.62 x 39mm";
+    [Export]
+    public float vRecoil = 5f;
+    [Export]
+    public float hRecoil = 5f;
+    [Export]
+    public float recoilTimer = 0.0f;
 
 
     //Object 
@@ -46,6 +52,9 @@ public partial class Firearm : Node3D
     public bool ableToShoot; //bool for if the weapon is able to shoot
 
     public int roundsInMag; //number of current rounds in the magazine
+
+    public Node3D startPosition;
+    
     
 
 	// Called when the node enters the scene tree for the first time.
@@ -57,34 +66,22 @@ public partial class Firearm : Node3D
         reloadAudio = GetNode<AudioStreamPlayer3D>("GunComponents/ReloadAudio");
         shootAudio = GetNode<AudioStreamPlayer3D>("GunComponents/ShootAudio");
         barrelRayCast = GetNode<RayCast3D>("GunComponents/BarrelRayCast");
+        startPosition = this;
         firerateTimer.WaitTime = 1/(firerate/60);
         roundsInMag = magazineSize;
         ableToShoot = true;
         barrelRayCast.ScaleObjectLocal(new Vector3(1,range,1));
-
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-        if(Input.IsActionPressed("shoot") && ableToShoot)
-        {
-            if(roundsInMag>0)
-            {
-                Shoot();
-                ableToShoot = false;
-            }
-        }
-        if(Input.IsActionJustReleased("reload") && ableToShoot)
-        {
-            ableToShoot = false;
-            reloadTimer.Start(reloadSpeed);
-            reloadAudio.Play();
-        }
+        
 	}
 
-    public void Shoot()
+    public void Shoot(double delta)
     {
         hitObject();
+        Recoil(delta);
         muzzleFlash.Shoot();
         firerateTimer.Start();
         shootAudio.Play();
@@ -106,9 +103,20 @@ public partial class Firearm : Node3D
                 impact.LookAt(impactPoint + impactNormal, Vector3.Up);
                 impact.Transform = impact.Transform.RotatedLocal(Vector3.Left, (float)(Math.PI/2.0));
             }
-            //impact.Rotate(impactNormal, (float)GD.RandRange(0,MathF.PI*2));
+            impact.Rotate(impactNormal, (float)GD.RandRange(0,MathF.PI*2));
         }
+    }
 
+    public void Recoil(double delta)
+    {
+        recoilTimer += (float)delta;
+        double horizontalRecoil = GD.RandRange(-hRecoil,hRecoil) * (MathF.PI/180);
+        double verticalRecoil = -GD.RandRange(1.2,1.5) * (MathF.PI/180);
+        Node3D unRecoiledGun = this;
+        Node3D recoiledGun = this;
+        recoiledGun.RotateX((float)verticalRecoil);
+        recoiledGun.RotateY((float)horizontalRecoil);
+        Transform = unRecoiledGun.Transform.InterpolateWith(recoiledGun.Transform, recoilTimer);
     }
 
     public void OnFirerateTimerTimeout()
