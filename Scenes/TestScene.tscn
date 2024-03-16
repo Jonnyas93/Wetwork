@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://sepv7rllgbb6"]
+[gd_scene load_steps=7 format=3 uid="uid://sepv7rllgbb6"]
 
 [ext_resource type="PackedScene" uid="uid://ha27jcycbgpw" path="res://Scenes/PlayerController.tscn" id="1_7qf3x"]
-[ext_resource type="PackedScene" uid="uid://d311pbua8xolf" path="res://Models/characterMedium.fbx" id="2_7r631"]
 [ext_resource type="PackedScene" uid="uid://bnmhm57v0bl5k" path="res://Scenes/Guns/AKM.tscn" id="3_2s4ih"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nfqo2"]
@@ -96,16 +95,10 @@ size = Vector3(60, 60, 2)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 38.0412, 0)
 
-[node name="Root Scene" parent="." instance=ExtResource("2_7r631")]
-transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -9, 0, 4)
-
 [node name="PlayerController" parent="." instance=ExtResource("1_7qf3x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.211715, 0)
 
-[node name="Weapon" type="Node3D" parent="PlayerController/CameraPivot" index="0"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -9.6277e-09, -1.61225, 0.110128)
-
-[node name="AKM" parent="PlayerController/CameraPivot/Weapon" instance=ExtResource("3_2s4ih")]
+[node name="AKM" parent="PlayerController/CameraPivot/Weapon" index="0" instance=ExtResource("3_2s4ih")]
 transform = Transform3D(-1.00126, 0, -8.75329e-08, 0, 1.00126, 0, 8.75329e-08, 0, -1.00126, -0.344856, 1.41367, 0.311151)
 
 [node name="CameraRayCast" parent="PlayerController/CameraPivot" index="2"]

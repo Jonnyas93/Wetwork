@@ -92,14 +92,13 @@ public partial class PlayerController : CharacterBody3D
         }
         if(Input.IsActionJustReleased("reload") && weaponObject.ableToShoot)
         {
+            weaponObject.Reload();
             weaponObject.ableToShoot = false;
-            weaponObject.reloadTimer.Start(weaponObject.reloadSpeed);
-            weaponObject.reloadAudio.Play();
         }
 
         if(weaponObject.ableToShoot)
         {
-            CenterWeapon();
+            CentreWeapon();
         }
 		Velocity = velocity;
         MoveAndSlide();
@@ -120,7 +119,7 @@ public partial class PlayerController : CharacterBody3D
 		}
 	}
 
-    public void CenterWeapon()
+    public void CentreWeapon()
     {
         var aimPoint = cameraRaycast.GetCollisionPoint();
         weaponObject.LookAt(aimPoint);

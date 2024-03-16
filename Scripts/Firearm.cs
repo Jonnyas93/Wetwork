@@ -44,7 +44,8 @@ public partial class Firearm : Node3D
     public Timer reloadTimer; //timer for reloading
     public AudioStreamPlayer3D shootAudio; //audio source for the bullets firing
     public AudioStreamPlayer3D reloadAudio; //audio source for reloading
-    public RayCast3D barrelRayCast; 
+    public RayCast3D barrelRayCast; //raycast for bullets to hit
+    public AnimationPlayer animPlayer;
     
 
 
@@ -66,11 +67,13 @@ public partial class Firearm : Node3D
         reloadAudio = GetNode<AudioStreamPlayer3D>("GunComponents/ReloadAudio");
         shootAudio = GetNode<AudioStreamPlayer3D>("GunComponents/ShootAudio");
         barrelRayCast = GetNode<RayCast3D>("GunComponents/BarrelRayCast");
+        animPlayer = GetNode<AnimationPlayer>("GunComponents/AnimationPlayer");
         startPosition = this;
         firerateTimer.WaitTime = 1/(firerate/60);
         roundsInMag = magazineSize;
         ableToShoot = true;
         barrelRayCast.ScaleObjectLocal(new Vector3(1,range,1));
+        reloadTimer.WaitTime = reloadSpeed;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -86,6 +89,15 @@ public partial class Firearm : Node3D
         firerateTimer.Start();
         shootAudio.Play();
         roundsInMag--;
+    }
+
+    public void Reload()
+    {
+        GD.Print(reloadTimer.WaitTime);
+        animPlayer.Play("Global/reload",-1,1/reloadSpeed,false);
+        ableToShoot = false;
+        reloadTimer.Start(reloadSpeed);
+        reloadAudio.Play();
     }
 
     private void hitObject()
@@ -109,6 +121,7 @@ public partial class Firearm : Node3D
 
     public void Recoil(double delta)
     {
+        
         recoilTimer += (float)delta;
         double horizontalRecoil = GD.RandRange(-hRecoil,hRecoil) * (MathF.PI/180);
         double verticalRecoil = -GD.RandRange(1.2,1.5) * (MathF.PI/180);
@@ -128,5 +141,6 @@ public partial class Firearm : Node3D
     {
         roundsInMag = magazineSize;
         ableToShoot = true;
+        GD.Print("Reload");
     }
 }
