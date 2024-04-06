@@ -95,6 +95,16 @@ public partial class PlayerController : CharacterBody3D
             weaponObject.Reload();
             weaponObject.ableToShoot = false;
         }
+        if(Input.IsActionJustReleased("cycle"))
+        {
+            if (weaponObject.jammed != Firearm.JamsState.ProperOperation)
+            {
+                weaponObject.Unjam();
+            }
+            else{
+                weaponObject.Cycle();
+            }
+        }
 
         if(weaponObject.ableToShoot)
         {

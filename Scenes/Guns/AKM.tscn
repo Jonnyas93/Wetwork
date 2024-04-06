@@ -185,7 +185,6 @@ script = ExtResource("1_77erp")
 weaponName = "AKM"
 firerate = 600.0
 reloadSpeed = 0.55
-jamingFactor = 0.0
 BulletImpact = ExtResource("2_rtfd5")
 
 [node name="GunComponents" type="Node3D" parent="."]
@@ -208,6 +207,12 @@ one_shot = true
 [node name="ReloadTimer" type="Timer" parent="GunComponents"]
 one_shot = true
 
+[node name="CycleTimer" type="Timer" parent="GunComponents"]
+one_shot = true
+
+[node name="UnjamTimer" type="Timer" parent="GunComponents"]
+one_shot = true
+
 [node name="ShootAudio" type="AudioStreamPlayer3D" parent="GunComponents"]
 stream = ExtResource("3_wigj4")
 
@@ -221,3 +226,5 @@ libraries = {
 
 [connection signal="timeout" from="GunComponents/FirerateTimer" to="." method="OnFirerateTimerTimeout"]
 [connection signal="timeout" from="GunComponents/ReloadTimer" to="." method="OnReloadTimerTimeout"]
+[connection signal="timeout" from="GunComponents/CycleTimer" to="." method="OnCycleTimerTimeout"]
+[connection signal="timeout" from="GunComponents/UnjamTimer" to="." method="OnUnjamTimerTimeout"]
